@@ -4,11 +4,10 @@
 #include <vector>
 #include <algorithm>
 
-
 #define c (char)
 
 void displayGame (int gb[3][3]);
-char handlePlayerTurn (int gameBoard[3][3], std::vector<int> &alreadyChosen, int &turn);
+char handlePlayerTurn (int gameBoard[3][3], std::vector<int> &alreadyChosen, int &turn, int &numTurns);
 int checkForWinner (int gb[3][3], int currentPick, int numTurns);
 
 int main ()
@@ -31,7 +30,7 @@ int main ()
     while (true)
     {
         displayGame(gameBoard);
-        currentPick = handlePlayerTurn(gameBoard, alreadyChosen, turn);
+        currentPick = handlePlayerTurn(gameBoard, alreadyChosen, turn, numTurns);
         
         // Print contents of vector for debugging.
         // for (int i = 0; i < alreadyChosen.size(); i++)
@@ -54,13 +53,13 @@ int main ()
             }
         }
 
-        if (checkForWinner(gameBoard, currentPick, turn) == 1)
+        if (checkForWinner(gameBoard, currentPick, numTurns) == 1)
         {
             displayGame(gameBoard);
             std::cout << "Game draw!" << std::endl;
             break;
         }
-        else if (checkForWinner(gameBoard, currentPick, turn) == 2)
+        else if (checkForWinner(gameBoard, currentPick, numTurns) == 2)
         {
             // Congratulate the winner.
             displayGame(gameBoard);
@@ -90,7 +89,7 @@ void displayGame (int gb[3][3])
 }
 
 // Return chosen player square.
-char handlePlayerTurn (int gameBoard[3][3], std::vector<int> &alreadyChosen, int &turn)
+char handlePlayerTurn (int gameBoard[3][3], std::vector<int> &alreadyChosen, int &turn, int &numTurns)
 {
     char currentPick;
     bool pickIsInChosen = false;
@@ -136,6 +135,7 @@ char handlePlayerTurn (int gameBoard[3][3], std::vector<int> &alreadyChosen, int
     }
     while (std::count(alreadyChosen.begin(), alreadyChosen.end(), currentPick));
 
+    numTurns++;
     turn = (turn == 0) ? 1 : 0;
 
     return currentPick;
@@ -192,6 +192,7 @@ int checkForWinner (int gb[3][3], int currentPick, int numTurns)
         }
     }
 
+    std::cout << "Turns: " << numTurns << std::endl;
     if (numTurns == 9)
     {
         return 1;
